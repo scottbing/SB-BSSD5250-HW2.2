@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                     if (it.getId() == -1) {    // ignore removal of eriginal blue Dot
                         tally -= 1
                         (it.parent as? RelativeLayout)?.addView(score)
-                        (it.parent as? RelativeLayout)?.addView(relativeLayout)
+                        (it.parent as? LinearLayoutCompat)?.addView(relativeLayout)
                     }
                     (it.parent as? RelativeLayout)?.addView(score)
                     Log.i("**** TALLY *****", "remove tally = "+tally)
