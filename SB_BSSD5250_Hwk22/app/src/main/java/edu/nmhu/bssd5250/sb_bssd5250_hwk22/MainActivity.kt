@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var linearLayout: LinearLayoutCompat
     private var score = 0
     private var tally = 0
-    //private lateinit var relativeLayout: RelativeLayout
+    private lateinit var relativeLayout: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +108,6 @@ class MainActivity : AppCompatActivity() {
                     (it.parent as? LinearLayoutCompat)?.addView(makeButton("blue"))
                     tally += 1
                     (it.parent as? RelativeLayout)?.addView(score)
-                    (it.parent as? LinearLayoutCompat)?.addView(relativeLayout)
                     Log.i("**** TALLY *****", "add tally = "+tally)
                 }
                 // set the ImageView bounds to match the Drawable's dimensions
@@ -132,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                     if (it.getId() == -1) {    // ignore removal of eriginal blue Dot
                         tally -= 1
                         (it.parent as? RelativeLayout)?.addView(score)
-                        (it.parent as? LinearLayoutCompat)?.addView(relativeLayout)
+                        (it.parent as? RelativeLayout)?.addView(relativeLayout)
                     }
                     (it.parent as? RelativeLayout)?.addView(score)
                     Log.i("**** TALLY *****", "remove tally = "+tally)
