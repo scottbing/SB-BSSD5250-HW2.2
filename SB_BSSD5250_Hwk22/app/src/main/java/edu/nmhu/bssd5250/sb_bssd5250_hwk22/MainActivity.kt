@@ -14,13 +14,10 @@ import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import android.view.ViewGroup
 
-
-
-
 class MainActivity : AppCompatActivity() {
     private lateinit var linearLayout: LinearLayoutCompat
-    private var score = 0
     private var tally = 0
+    private lateinit var score : TextView
     private lateinit var relativeLayout: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             0.2f
             )
             // Add the ImageView to the layout.
-            addView(makeButton("red"))  //add the red image
+            addView(makeButton("red","orig"))  //add the red image
         }
 
         // Create a ConstraintLayout in which to add the ImageView
@@ -47,13 +44,13 @@ class MainActivity : AppCompatActivity() {
                 0.2f
             )
             // Add the ImageView to the layout.
-            addView(makeButton("blue"))  //add the blue image
+            addView(makeButton("blue", "orig"))  //add the blue image
         }
 
         //Not textViewCompat, eventhough it exists
         // TextViewCompat is a helper class for TextView unlike LinearLayoutCompat
         //var scoreNum = tally
-        val score = TextView(this).apply {
+        score = TextView(this).apply {
             text = tally.toString()
             val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
             val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48f, metrics)
@@ -68,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Create a ConstraintLayout in which to add the ImageView
-        val relativeLayout = RelativeLayout(this).apply {
+        relativeLayout = RelativeLayout(this).apply {
             setBackgroundColor(Color.BLUE)
             layoutParams = LinearLayoutCompat.LayoutParams(
                 LinearLayoutCompat.LayoutParams.MATCH_PARENT,
@@ -97,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(linearLayout)
     }
 
-    private fun makeButton(color: String): ImageButton {
+    private fun makeButton(color: String, method: String): ImageButton {
         val button = if (color == "red") {
             //this whole thing  below is one constructor
             ImageButton(this).apply {
@@ -105,9 +102,9 @@ class MainActivity : AppCompatActivity() {
                 background = null
                 contentDescription = "Red Dot Image" //resources.getString(R.string.my_image_desc
                 setOnClickListener {
-                    (it.parent as? LinearLayoutCompat)?.addView(makeButton("blue"))
+                    (it.parent as? LinearLayoutCompat)?.addView(makeButton("blue", "dynam"))
                     tally += 1
-                    (it.parent as? RelativeLayout)?.addView(score)
+                    score.text = tally.toString()
                     Log.i("**** TALLY *****", "add tally = "+tally)
                 }
                 // set the ImageView bounds to match the Drawable's dimensions
@@ -121,20 +118,20 @@ class MainActivity : AppCompatActivity() {
         } else { //must be blue
             //this whole thing below is one constructor call technically
             ImageButton(this).apply {
+                this.id = View.generateViewId()
                 setImageResource(R.drawable.blue)
                 background = null
                 contentDescription = "Blue Dot Image" //resources.getString(R.string.my_image_desc
                 setOnClickListener {
                     (it.parent as LinearLayoutCompat).removeView(it)
-                    Log.i("**** ID *****", "id = "+it.getId())
+                    Log.i("**** ID *****", "id = "+it.id)
+                    Log.i("**** Method *****", "id = "+method)
                     Log.i("***** Parent Id *****","parent = "+it.parent)
-                    if (it.getId() == -1) {    // ignore removal of eriginal blue Dot
+                    if (method == "dynam") {    // ignore removal of eriginal blue Dot
                         tally -= 1
-                        (it.parent as? RelativeLayout)?.addView(score)
-                        (it.parent as? LinearLayoutCompat)?.addView(relativeLayout)
+                        score.setText(tally.toString())
+                        Log.i("**** TALLY *****", "remove tally = "+tally)
                     }
-                    (it.parent as? RelativeLayout)?.addView(score)
-                    Log.i("**** TALLY *****", "remove tally = "+tally)
                 }
                 // set the ImageView bounds to match the Drawable's dimensions
                 adjustViewBounds = true
@@ -149,7 +146,5 @@ class MainActivity : AppCompatActivity() {
     }// end fun makeButton(color:String):ImageButton
 }
 
-private fun RelativeLayout?.addView(score: Int) {
 
-}
 
